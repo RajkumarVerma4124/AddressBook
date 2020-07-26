@@ -10,33 +10,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-class BubbleSort
-{
-	public static <A extends Comparable<A>> void bubble(A[] arr,int n){
-		int length=n;
-		for(int i=0;i<length-1;i++) {
-			for(int j=0;j<n-i-1;j++) {
-				if(arr[j].compareTo(arr[j+1])>0) {
-						A temp=arr[j];
-						arr[j]=arr[j+1];
-						arr[j+1]=temp;
-				}
-			}
-		}
-		
-		for(int k=0;k<n;++k) {
-			System.out.print("Sorted Value : "+arr[k]+" ");
-			System.out.println();
-		}
-	}
-}  
-
 @SuppressWarnings("unchecked")
-
-public class AddressBook extends BubbleSort{
+public class AddressBook extends BubbleSort {
 	static Scanner sc = new Scanner(System.in);
-	
+	static JSONObject personObject = new JSONObject();
+	static JSONArray personDetailArr = new JSONArray();
+	static JSONObject addrDetailsObj = new JSONObject();
+	static JSONArray addrArr = new JSONArray();
+	static JSONObject personDetailsObj = new JSONObject();
+	static JSONParser parserFile = new JSONParser();
 
+
+	
 	public static void main(String [] args) throws FileNotFoundException, IOException, ParseException {
 		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
@@ -45,7 +30,7 @@ public class AddressBook extends BubbleSort{
 			while(true) {
 			    System.out.println("****Welcome To Address Book***");
 				System.out.println("1.Create Entry\n2.Edit the Existing Details \n3.Delete Entry Of Existing Person \n4.Add new Persons Details\n"
-									+ "5.Read The Existing Data and Display \n6.Sort the Data Using their Key\n7.Search The Person Details\n8.Exit");
+									+ "5.Read The Existing Data and Display \n6.Sort the Data Using their Key\n7.Exit");
 				System.out.print("Enter the choices : ");
 				choice = sc.nextInt();
 				switch (choice) {
@@ -82,11 +67,8 @@ public class AddressBook extends BubbleSort{
 							String s = sc.nextLine();
 		            		sortingData(s);
 		            		break;
-		            		
-					case 7: searchData();
-		                break;
-		             
-					case 8:
+		         
+					case 7:
 		                System.exit(1);
 		             
 					default:
@@ -99,16 +81,11 @@ public class AddressBook extends BubbleSort{
 	
 	static void create() throws IOException {
 		// TODO Auto-generated method stub
-		JSONObject personObject = new JSONObject();
-		JSONArray personDetailArr = new JSONArray();
 		
 		System.out.print("Enter The No Of Records Of Person You Want To Enter : ");
 		int records = sc.nextInt();
-		for (int i = 0; i < records; i++)
-		{
-		JSONObject addrDetailsObj = new JSONObject();
-		JSONObject personDetailsObj = new JSONObject();
-		JSONArray addrArr = new JSONArray();
+		for (int i = 0; i < records; i++) {
+		
 		System.out.print("Enter the First name of person : ");
 		String fname  = sc.next();
 		personDetailsObj.put("FirstName", fname);
@@ -138,8 +115,7 @@ public class AddressBook extends BubbleSort{
 	
 	static void edit() throws IOException, ParseException{
 		// TODO Auto-generated method stub
-		JSONParser parserFile = new JSONParser();
-	    Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json"));
+	    Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON2.json"));
 		JSONObject personDataObject = (JSONObject) objOfFileData;
 		String filestrs = personDataObject.toString();
 		System.out.print(filestrs+"\n");		
@@ -149,6 +125,7 @@ public class AddressBook extends BubbleSort{
 		for(int i =0;i<personDataArr.size();i++) {
 			JSONObject personDetails = (JSONObject) personDataArr.get(i);
 			if(personDetails.get("Phone").toString().equals(number) == true) {
+				System.out.println("Person Details You Searched For : "+personDetails.toString());
 				System.out.print("Enter What field you want to update : ");
 				String strAddr = sc.next();
 				if(strAddr.equals("ADDRESS"))  {
@@ -167,17 +144,16 @@ public class AddressBook extends BubbleSort{
 					while(iterator.hasNext()) {
 						JSONObject objOfAddress = (JSONObject) iterator.next();
 						System.out.print(objOfAddress.toString());
-						String feildstr = objOfAddress.toString();
-						System.out.println("String"+feildstr);
-		
+						
 						if(objOfAddress.get(strfeild).equals(strExistValue) == true) {
 							objOfAddress.put(strfeild, strNewValue);						
 							System.out.println(objOfAddress.toString());
 						}
 					
 						writes(personDataObject.toJSONString());
-						System.out.print("Updated Data Successfully\n");
 					}
+					System.out.print("Updated Data Successfully\n");
+
 				}
 				else {
 					System.out.print("Enter the Existing value : ");
@@ -187,16 +163,14 @@ public class AddressBook extends BubbleSort{
 					Iterator<?> itr = personDataArr.iterator();
 					while(itr.hasNext()) {
 						JSONObject objOfPerson = (JSONObject) itr.next();
-						String feildstr = objOfPerson.toString();
-						System.out.println("Person Details :"+feildstr);
+					
 						if(objOfPerson.get(strAddr).equals(strExistValue) == true) {
 							objOfPerson.put(strAddr, strNewValue);						
 								System.out.println("Person Details After Update : "+objOfPerson.toString());
 						}		
 						writes(personDataObject.toJSONString());
-						System.out.print("Updated Data Successfully\n");
-
 					}
+					System.out.print("Updated Data Successfully\n");
 				}
 			}
 			else {
@@ -207,8 +181,7 @@ public class AddressBook extends BubbleSort{
 	
 	static void delete() throws FileNotFoundException, IOException, ParseException {
 		// TODO Auto-generated method stub
-		JSONParser parserFile = new JSONParser();
-	    Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json"));
+	    Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON2.json"));
 		JSONObject personDataObject = (JSONObject) objOfFileData;
 		String filestr = personDataObject.toString();
 		System.out.println(filestr+"\n");
@@ -238,14 +211,9 @@ public class AddressBook extends BubbleSort{
 	
 	static void addNew() throws IOException, ParseException{
 		// TODO Auto-generated method stub
-		JSONParser parserFile = new JSONParser();
-	    Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json"));
-	    JSONObject personObjectOfFile = (JSONObject) objOfFileData;
-		JSONArray personDetailArr = (JSONArray) personObjectOfFile.get("PERSON");
-		JSONObject personObject = new JSONObject();
-		JSONObject addrDetailsObj = new JSONObject();
-		JSONObject personDetailsObj = new JSONObject();
-		JSONArray addrArr = new JSONArray();
+	    Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON2.json"));
+	    JSONObject personDataObject = (JSONObject) objOfFileData;
+		JSONArray personDetailArr = (JSONArray) personDataObject.get("PERSON");
 		System.out.print("Enter the First name of person : ");
 		String fname  = sc.next();
 		personDetailsObj.put("FirstName", fname);
@@ -276,22 +244,20 @@ public class AddressBook extends BubbleSort{
 	
 	static void read() throws FileNotFoundException, IOException, ParseException {
 		// TODO Auto-generated method stub
-		 JSONParser parseFile = new JSONParser();
-		 Object objOfFileData = parseFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json"));
-		 JSONObject personObject = (JSONObject) objOfFileData;
-		 writes(personObject.toJSONString());
-		 System.out.println(personObject);
+		 Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON2.json"));
+		 JSONObject personDataObject = (JSONObject) objOfFileData;
+		 writes(personDataObject.toJSONString());
+		 System.out.println(personDataObject);
 		
 	}
 	
 	@SuppressWarnings("static-access")
 	static void sortingData(String s) {
         String sortedpersonArray[];
-        JSONParser parseFile = new JSONParser();
         try {
-            Object objOfFileData = parseFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json"));
-            JSONObject personObject = (JSONObject) objOfFileData;
-            JSONArray personArray = (JSONArray) personObject.get("PERSON");
+            Object objOfFileData = parserFile.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON2.json"));
+            JSONObject personDataObject = (JSONObject) objOfFileData;
+            JSONArray personArray = (JSONArray) personDataObject.get("PERSON");
             sortedpersonArray = new String[personArray.size()];
             for (int i = 0; i < personArray.size(); i++) {
             	if (s.equals("FirstName") || s.equals("Phone") || s.equals("LastName")) {
@@ -342,26 +308,10 @@ public class AddressBook extends BubbleSort{
         catch (Exception e) {
         }
     }
-		
-	static void searchData() throws FileNotFoundException, IOException, ParseException {
-		// TODO Auto-generated method stub
-		JSONParser parseSearch = new JSONParser();
-		Object personSearch = parseSearch.parse(new FileReader("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json"));
-		JSONObject personObject = (JSONObject) personSearch;
-		JSONArray personArray = (JSONArray) personObject.get("PERSON");
-		System.out.print("Enter the number or name of the person to search : ");
-		String search = sc.next();
-		for(int i = 0; i<personArray.size();i++){
-			JSONObject objOfPerson = (JSONObject) personArray.get(i);
-			if(objOfPerson.get("Phone").toString().equals(search) || objOfPerson.get("FirstName").toString().equals(search)) {
-				System.out.println(objOfPerson);
-			}
-		}
-	}
-
+	
 	static void writes(String str) throws IOException 
 	{
-		FileWriter files = new FileWriter("C:/Users//Raj//Desktop//CORE PROGRAMS//generics//myJSON2.json");
+		FileWriter files = new FileWriter("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON2.json");
 		files.write(str);
 		files.flush();
 		files.close();		
