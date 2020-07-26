@@ -185,24 +185,22 @@ public class AddressBook extends BubbleSort {
 		JSONObject personDataObject = (JSONObject) objOfFileData;
 		String filestr = personDataObject.toString();
 		System.out.println(filestr+"\n");
-		String str1 = "";
+		String strReplace = "";
 		System.out.print("Enter the phone number of person you want to delete : ");
-		sc.nextLine();
 		String strOfPhone = sc.nextLine();
-		JSONArray arr4 = (JSONArray) personDataObject.get("PERSON");
+		JSONArray personArray = (JSONArray) personDataObject.get("PERSON");
 		@SuppressWarnings("rawtypes")
-		Iterator i = arr4.iterator();
+		Iterator i = personArray.iterator();
 		while(i.hasNext())
 		{
 			JSONObject objOfPerson = (JSONObject) i.next();
-			System.out.println(objOfPerson.get("Phone"));
 			if(objOfPerson.get("Phone").toString().equals(strOfPhone) == true)
 			{
-					str1 +=  objOfPerson.toString();
+					strReplace +=  objOfPerson.toString();
 					System.out.println(objOfPerson.toString());
 			}
 		}
-		String strDelete = filestr.replace(str1, "");
+		String strDelete = filestr.replace(strReplace, "");
 		Object newDataObject = parserFile.parse(strDelete);
 		JSONObject newPersonDetailObj =(JSONObject) newDataObject;
 		writes(newPersonDetailObj.toJSONString());
@@ -303,7 +301,10 @@ public class AddressBook extends BubbleSort {
             }
             sortedpersonObject.put("PERSON", sortedArray);
             System.out.println(sortedpersonObject.toString());
-            writes(sortedpersonObject.toJSONString());
+            FileWriter filesSort = new FileWriter("C:/Users//Raj//Desktop//CORE PROGRAMS//JSON//myJSON.json");
+    	    filesSort.write(sortedpersonObject.toJSONString());
+    	    filesSort.flush();
+    	    filesSort.close();	
         } 
         catch (Exception e) {
         }
